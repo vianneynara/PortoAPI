@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SimplePortoApiApplication {
+public class PortoApiApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SimplePortoApiApplication.class, args);
+		SpringApplication.run(PortoApiApplication.class, args);
 	}
 
 }
