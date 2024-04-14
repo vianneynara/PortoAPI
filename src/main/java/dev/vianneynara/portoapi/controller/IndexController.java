@@ -1,4 +1,4 @@
-package dev.vianneynara.simpleportoapi.controller;
+package dev.vianneynara.portoapi.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

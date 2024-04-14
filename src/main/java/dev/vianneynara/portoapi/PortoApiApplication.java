@@ -1,4 +1,4 @@
-package dev.vianneynara.simpleportoapi;
+package dev.vianneynara.portoapi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
