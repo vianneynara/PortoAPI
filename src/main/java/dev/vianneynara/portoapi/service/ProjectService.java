@@ -9,7 +9,7 @@ import java.util.Collection;
 public interface ProjectService {
 	Project createProject(Project project);
 	Project retrieveProject(Long id);
-	void updateProject(Long id, Project project);
+	Project updateProject(Long id, Project project);
 	void deleteProject(Long id);
 	Collection<Project> retrieveProjects();
 }

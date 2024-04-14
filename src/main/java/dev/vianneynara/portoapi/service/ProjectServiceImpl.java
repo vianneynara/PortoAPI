@@ -31,7 +31,7 @@ public class ProjectServiceImpl implements ProjectService {
 	}
 
 	@Override
-	public void updateProject(Long id, Project project) {
+	public Project updateProject(Long id, Project project) {
 		Project p = projectRepository.findById(id)
 			.orElseThrow(() -> new ResourceNotFoundException("Project with id '" + id + "' could not be found!"));
 		p.setName(project.getName());
@@ -40,6 +40,7 @@ public class ProjectServiceImpl implements ProjectService {
 		p.setTags(project.getTags());
 		p.setProjectUrl(project.getProjectUrl());
 		projectRepository.save(p);
+		return p;
 	}
 
 	@Override
