@@ -28,10 +28,12 @@ public class ProjectController {
 
 	@GetMapping("{id}")
 	public ResponseEntity<Project> retrieveProject(@PathVariable Long id) {
-		Project project = projectService.retrieveProject(id);
-		return project != null
-			? ResponseEntity.ok(project)
-			: ResponseEntity.notFound().build();
+		try {
+			Project project = projectService.retrieveProject(id);
+			return ResponseEntity.ok(project);
+		} catch (ResourceNotFoundException e) {
+			return ResponseEntity.notFound().build();
+		}
 	}
 
 	@GetMapping
