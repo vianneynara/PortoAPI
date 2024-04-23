@@ -2,6 +2,7 @@ package dev.vianneynara.portoapi.controller;
 
 import dev.vianneynara.portoapi.exceptions.ResourceNotFoundException;
 import dev.vianneynara.portoapi.model.Project;
+import dev.vianneynara.portoapi.response.ApiResponse;
 import dev.vianneynara.portoapi.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,53 +22,51 @@ public class ProjectController {
 	}
 
 	@PostMapping
-	public ResponseEntity<Project> createProject(@RequestBody Project project) {
-		Project saved = projectService.createProject(project);
-		return ResponseEntity.ok(saved);
-	}
-
-	@GetMapping("{id}")
-	public ResponseEntity<Project> retrieveProject(@PathVariable Long id) {
-		Project project = projectService.retrieveProject(id);
-		return project != null
-			? ResponseEntity.ok(project)
-			: ResponseEntity.notFound().build();
-	}
-
-	@GetMapping
-	public ResponseEntity<Collection<Project>> retrieveProjects() {
-		Collection<Project> projects = projectService.retrieveProjects();
-		return ResponseEntity.ok(projects);
-	}
-
-	@PutMapping("{id}")
-	public ResponseEntity<Project> updateProject(@PathVariable Long id, @RequestBody Project project) {
+	public ResponseEntity<ApiResponse<Project>> createProject(@RequestBody Project project) {
 		if (project == null) {
 			return ResponseEntity.badRequest().build();
 		}
 
+		Project createdProject = projectService.createProject(project);
+		return ResponseEntity.ok(new ApiResponse<>(createdProject));
+	}
+
+	@GetMapping("{id}")
+	public ResponseEntity<ApiResponse<Project>> retrieveProject(@PathVariable Long id) {
 		try {
-			Project existingProject = projectService.retrieveProject(id);
-			if (existingProject == null) return ResponseEntity.notFound().build();
+			Project project = projectService.retrieveProject(id);
+			return ResponseEntity.ok(new ApiResponse<>(project));
+		} catch (ResourceNotFoundException e) {
+			return ResponseEntity.notFound().build();
+		}
+	}
 
-			projectService.updateProject(id, project);
-			Project updatedProject = projectService.retrieveProject(id);
+	@GetMapping
+	public ResponseEntity<ApiResponse<Collection<Project>>> retrieveProjects() {
+		Collection<Project> projects = projectService.retrieveProjects();
+		return ResponseEntity.ok(new ApiResponse<>(projects));
+	}
 
-			return ResponseEntity.ok(updatedProject);
+	@PutMapping("{id}")
+	public ResponseEntity<ApiResponse<Project>> updateProject(@PathVariable Long id, @RequestBody Project project) {
+		if (projectService.retrieveProject(id) == null || project == null) {
+			return ResponseEntity.badRequest().build();
+		}
+
+		try {
+			Project p = projectService.updateProject(id, project);
+			return ResponseEntity.ok(new ApiResponse<>(p));
 		} catch (ResourceNotFoundException e) {
 			return ResponseEntity.notFound().build();
 		}
 	}
 
 	@DeleteMapping("{id}")
-	public ResponseEntity<Void> deleteProject(@PathVariable Long id) {
+	public ResponseEntity<ApiResponse<Project>> deleteProject(@PathVariable Long id) {
 		try {
-			Project existingProject = projectService.retrieveProject(id);
-			if (existingProject == null) return ResponseEntity.notFound().build();
-
+			Project project = projectService.retrieveProject(id);
 			projectService.deleteProject(id);
-
-			return ResponseEntity.ok().build();
+			return ResponseEntity.ok(new ApiResponse<>(project));
 		} catch (ResourceNotFoundException e) {
 			return ResponseEntity.notFound().build();
 		}
